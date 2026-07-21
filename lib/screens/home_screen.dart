@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../models/expense.dart';
+import '../widgets/expense_card.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
 
   final List<Expense> expenses = [
     Expense(
@@ -69,23 +70,7 @@ class HomeScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final expense = expenses[index];
 
-                  return Card(
-                    margin: const EdgeInsets.only(bottom: 10),
-                    child: ListTile(
-                      leading: const CircleAvatar(
-                        child: Icon(Icons.attach_money),
-                      ),
-                      title: Text(expense.title),
-                      subtitle: Text(expense.category),
-                      trailing: Text(
-                        '\$${expense.amount.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        ),
-                      ),
-                    ),
-                  );
+                  return ExpenseCard(expense: expense);
                 },
               ),
             ),
