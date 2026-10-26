@@ -1,0 +1,19 @@
+# Local environment configuration
+.env
+.env.*
+!.env.example
+
+# Firebase private credentials
+*service-account*.json
+*serviceAccount*.json
+firebase-adminsdk*.json
+
+# Private key files
+*.pem
+*.p12
+*.p8
+*.jks
+*.keystore
+
+# Local signing configuration
+android/key.properties

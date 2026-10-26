@@ -21,21 +21,21 @@ class DatabaseHelper {
 
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(path, version: 2, onCreate: _createDB);
   }
 
   Future _createDB(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE expenses(
-        id TEXT PRIMARY KEY,
-        title TEXT NOT NULL,
-        amount REAL NOT NULL,
-        category TEXT NOT NULL,
-        date TEXT NOT NULL,
-        id INTEGER PRIMARY KEY
-        amount REAL
-      )
-    ''');
+    CREATE TABLE expenses(
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      amount REAL NOT NULL,
+      category TEXT NOT NULL,
+      date TEXT NOT NULL,
+      isRecurring INTEGER NOT NULL DEFAULT 0
+      recurrence TEXT NOT NULL DEFAULT 'Monthly',
+    )
+  ''');
   }
 
   Future<void> insertExpense(Expense expense) async {
@@ -71,6 +71,24 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [expense.id],
     );
+  }
+
+  Future<void> deleteDatabaseFile() async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, 'expenses.db');
+    await deleteDatabase(path);
+  }
+
+  Future<List<Expense>> getRecurringExpenses() async {
+    final db = await instance.database;
+
+    final result = await db.query(
+      'expenses',
+      where: 'isRecurring = ?',
+      whereArgs: [1],
+    );
+
+    return result.map((e) => Expense.fromMap(e)).toList();
   }
 
   Future close() async {
